@@ -1,0 +1,60 @@
+
+    <header class="navbar">
+        <a href="#scan" class="nav-brand" id="nav-brand-link" title="EcoVision AI - Return to Studio">
+            <span class="logo-icon-badge" aria-label="EcoVision Logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/>
+                    <path d="M11 19h8.2a1.8 1.8 0 0 0 1.57-.88 1.78 1.78 0 0 0 0-1.79l-4.13-7.33"/>
+                    <path d="m14 12 3-6 3 6"/>
+                    <path d="M3.5 12h6"/>
+                    <path d="m3 16 2 3-3 2"/>
+                </svg>
+            </span>
+            <div class="logo-text-group">
+                <span class="logo-title">EcoVision AI</span>
+                <span class="logo-subtitle">Computer Vision Waste Verification</span>
+            </div>
+        </a>
+
+        <!-- USER & QUICK WALLET BADGE -->
+        <div class="nav-user-panel">
+            <!-- Staff Quick Customer Lookup button -->
+            <button id="btn-nav-quick-check" class="quick-check-nav-btn hidden" type="button" title="Customer lookup at counter">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <span>Quick Customer Lookup</span>
+            </button>
+
+            <!-- Authenticated Profile (Clicking opens the User Sidebar!) -->
+            <div id="nav-auth-section" class="nav-auth-container">
+                <div class="user-info" id="nav-user-info-btn" role="button" title="Click to open User Sidebar">
+                    <span id="user-display-name" class="username">green_collector</span>
+                    <span id="user-display-email" class="user-email">collector@ecovision.org</span>
+                </div>
+                <button id="open-wallet-btn" class="wallet-badge" type="button" title="Click to open User Sidebar & Wallet">
+                    <span class="wallet-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="14" x="2" y="5" rx="2"/>
+                            <line x1="2" x2="22" y1="10" y2="10"/>
+                        </svg>
+                    </span>
+                    <span id="nav-points">0 Pts</span>
+                    <span class="naira-tag" id="nav-naira">₦0</span>
+                </button>
+                <button id="logout-btn" class="btn btn-outline btn-sm" type="button" title="Sign out of account">
+                    Sign Out
+                </button>
+            </div>
+
+            <!-- Guest Profile -->
+            <div id="nav-guest-section" class="nav-guest-container hidden">
+                <button id="open-auth-btn" class="btn btn-primary btn-sm" type="button" title="Sign in or register">
+                    Sign In / Register
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HIDDEN FILE INPUT -->

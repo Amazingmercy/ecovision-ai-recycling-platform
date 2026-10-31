@@ -1,0 +1,96 @@
+    <div id="user-sidebar-drawer" class="user-sidebar-drawer hidden" aria-hidden="true">
+        <div class="user-sidebar-backdrop" id="user-sidebar-backdrop"></div>
+        <aside class="user-sidebar-panel" id="user-sidebar-panel">
+            <div class="user-sidebar-header">
+                <div class="sidebar-user-identity">
+                    <div class="sidebar-avatar" id="sidebar-user-avatar">U</div>
+                    <div>
+                        <h3 id="sidebar-user-name" class="sidebar-username">Customer</h3>
+                        <span id="sidebar-user-role" class="badge badge-primary">User</span>
+                    </div>
+                </div>
+                <button class="close-sidebar-btn" id="close-user-sidebar-btn" type="button" aria-label="Close user sidebar">&times;</button>
+            </div>
+
+            <div class="user-sidebar-body">
+                <!-- WALLET POINTS & CASH BALANCE -->
+                <div class="sidebar-wallet-card">
+                    <span class="sidebar-card-label">AVAILABLE RECYCLING BALANCE</span>
+                    <div class="sidebar-balance-row">
+                        <div class="sidebar-points" id="sidebar-points-val">0 <span class="unit">Pts</span></div>
+                        <div class="sidebar-naira" id="sidebar-naira-val">₦0 Cash</div>
+                    </div>
+                    <div class="sidebar-progress-box mt-2">
+                        <div class="flex-between text-xs text-muted">
+                            <span>Payout Threshold: 100 Pts (₦1,000)</span>
+                            <span id="sidebar-progress-percent">0%</span>
+                        </div>
+                        <div class="progress-track mt-1">
+                            <div class="progress-bar" id="sidebar-progress-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <button id="sidebar-withdraw-btn" class="btn btn-primary btn-block mt-3" type="button">
+                        Withdraw Cash to Bank
+                    </button>
+                </div>
+
+                <!-- BANK ACCOUNT DETAILS (ENTER & SAVE) -->
+                <div class="sidebar-section-card mt-3">
+                    <div class="sidebar-card-header">
+                        <h4>Bank Account Details</h4>
+                        <span class="text-xs text-muted">Direct commercial bank disbursement</span>
+                    </div>
+
+                    <div id="sidebar-account-alert" class="alert hidden mt-2"></div>
+
+                    <form id="sidebar-account-form" onsubmit="return false;" class="mt-2">
+                        <div class="form-group">
+                            <label for="sidebar-bank-name">Bank Name</label>
+                            <input list="nigerian-banks-list" type="text" id="sidebar-bank-name" class="form-control" placeholder="Select or type your bank name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sidebar-account-number">10-Digit Account Number</label>
+                            <input type="text" id="sidebar-account-number" maxlength="10" class="form-control" placeholder="e.g. 0123456789" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sidebar-account-name">Account Holder Name</label>
+                            <input type="text" id="sidebar-account-name" class="form-control" placeholder="e.g. Chukwuma Adebayo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sidebar-phone-number">Phone Number (Optional)</label>
+                            <input type="tel" id="sidebar-phone-number" class="form-control" placeholder="e.g. 08012345678">
+                        </div>
+                        <button id="sidebar-btn-save-account" class="btn btn-outline btn-block mt-2" type="submit">
+                            <span id="sidebar-save-spinner" class="spinner hidden"></span>
+                            <span>Save Bank Account</span>
+                        </button>
+                        <span id="sidebar-account-status" class="text-muted text-xs block text-center mt-1">Not yet configured</span>
+                    </form>
+                </div>
+
+                <!-- QUICK RECENT ACTIVITY -->
+                <div class="sidebar-section-card mt-3">
+                    <div class="sidebar-card-header flex-between">
+                        <h4>Recent Intakes</h4>
+                        <span class="text-xs text-muted" id="sidebar-history-count">0 Records</span>
+                    </div>
+                    <div class="sidebar-history-list mt-2" id="sidebar-history-list">
+                        <p class="text-muted text-xs text-center py-2">No past drop-offs yet.</p>
+                    </div>
+                    <button id="sidebar-btn-view-ledger" class="btn btn-outline btn-block mt-2" type="button" style="font-size: 0.8rem; padding: 6px 12px;">
+                        Open Dedicated History Ledger &rarr;
+                    </button>
+                </div>
+
+                <!-- SIGN OUT / SWITCH -->
+                <div class="sidebar-footer-actions mt-3">
+                    <button id="sidebar-logout-btn" class="btn btn-outline btn-block" type="button">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-container">

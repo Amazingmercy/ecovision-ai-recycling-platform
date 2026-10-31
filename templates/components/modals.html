@@ -1,0 +1,221 @@
+
+    <div id="quick-check-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quick-check-title">
+        <div class="modal-backdrop" id="quick-check-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 id="quick-check-title">Customer Balance &amp; Status Lookup</h3>
+                    <p class="text-muted text-xs">Collection Center Staff Tool</p>
+                </div>
+                <button class="close-modal-btn" id="close-quick-check-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="quick-check-input">Customer Username or Email</label>
+                    <div class="search-input-group">
+                        <input type="text" id="quick-check-input" class="form-control" placeholder="e.g. green_collector or user@domain.com">
+                        <button id="btn-run-quick-check" class="btn btn-primary btn-sm" style="position: absolute; right: 4px;" type="button">Search</button>
+                    </div>
+                </div>
+                
+                <div id="quick-check-error" class="alert alert-danger hidden mt-2"></div>
+
+                <div id="quick-check-result" class="quick-check-result-card hidden mt-2">
+                    <div class="quick-user-header">
+                        <div class="quick-avatar" id="qc-avatar">U</div>
+                        <div>
+                            <strong id="qc-username" class="text-primary text-sm">username</strong>
+                            <span id="qc-email" class="text-muted text-xs block">user@example.com</span>
+                        </div>
+                    </div>
+                    <div class="quick-metrics-row mt-2">
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">POINTS</span>
+                            <strong id="qc-points" class="text-green">0 Pts</strong>
+                        </div>
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">CASH VALUE</span>
+                            <strong id="qc-naira" class="text-blue">₦0</strong>
+                        </div>
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">TOTAL VISITS</span>
+                            <strong id="qc-visits" class="text-primary">0</strong>
+                        </div>
+                    </div>
+                    <div class="quick-bank-status mt-2" id="qc-bank-box">
+                        <span id="qc-bank-text" class="text-xs">Account details: Checked</span>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button id="btn-qc-select-customer" class="btn btn-primary btn-sm btn-block" type="button">
+                            Select This Customer for Current Intake &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 2: REGISTER WALK-IN CUSTOMER (STAFF DESK)                   -->
+    <!-- ================================================================= -->
+    <div id="quick-customer-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quick-customer-title">
+        <div class="modal-backdrop" id="quick-customer-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 id="quick-customer-title">Register Walk-In Customer</h3>
+                    <p class="text-muted text-xs">Add a customer at the collection counter</p>
+                </div>
+                <button class="close-modal-btn" id="close-quick-customer-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="quick-customer-error" class="alert alert-danger hidden"></div>
+                <form id="quick-customer-form" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="qc-reg-username">Username <span class="text-danger">*</span></label>
+                        <input type="text" id="qc-reg-username" class="form-control" placeholder="e.g. chukwuma_ade" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="qc-reg-email">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" id="qc-reg-email" class="form-control" placeholder="customer@domain.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="qc-reg-phone">Phone Number (Optional)</label>
+                        <input type="tel" id="qc-reg-phone" class="form-control" placeholder="e.g. 08012345678">
+                    </div>
+                    <div class="modal-actions mt-3">
+                        <button type="button" class="btn btn-outline" id="cancel-quick-customer-btn">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirm-quick-customer-btn">Register &amp; Select</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 3: CASH WITHDRAWAL MODAL                                    -->
+    <!-- ================================================================= -->
+    <div id="withdrawal-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-backdrop" id="withdrawal-modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="modal-title">Withdraw Cash to Commercial Bank</h3>
+                <button class="close-modal-btn" id="close-modal-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <strong>Rule:</strong> 1 Point = ₦10. Minimum withdrawal threshold is <strong>100 Points (₦1,000)</strong>.
+                </div>
+                <div class="form-group">
+                    <label for="withdraw-points-input">Points to Redeem (Available: <strong id="modal-available-points" class="text-green">0</strong> Points)</label>
+                    <input type="number" id="withdraw-points-input" min="100" step="10" class="form-control" placeholder="e.g. 100">
+                    <small class="text-muted" id="modal-naira-preview">= ₦0 Cash</small>
+                </div>
+                <div id="modal-bank-on-file-box" class="alert alert-success hidden mt-2">
+                    <small>Disbursing to Saved Account: <strong id="modal-bank-on-file-text">Bank</strong></small>
+                </div>
+                <div class="form-group mt-2">
+                    <label for="withdraw-bank">Commercial Bank Name</label>
+                    <input type="text" id="withdraw-bank" class="form-control" placeholder="e.g. Access Bank, GTBank, Zenith Bank">
+                </div>
+                <div class="form-group mt-2">
+                    <label for="withdraw-account-num">10-Digit Account Number</label>
+                    <input type="text" id="withdraw-account-num" class="form-control" placeholder="0123456789" maxlength="10">
+                </div>
+                <div class="form-group mt-2">
+                    <label for="withdraw-account-name">Account Beneficiary Name</label>
+                    <input type="text" id="withdraw-account-name" class="form-control" placeholder="Account holder name">
+                </div>
+                <div id="modal-error-message" class="alert alert-danger hidden mt-2"></div>
+                <div class="modal-actions mt-3">
+                    <button type="button" class="btn btn-outline" id="cancel-withdraw-btn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirm-withdraw-btn">Confirm Withdrawal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 4: AUTHENTICATION (SIGN IN & REGISTER)                      -->
+    <!-- ================================================================= -->
+    <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+        <div class="modal-backdrop" id="auth-modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="auth-modal-title">Account Access</h3>
+                <button class="close-modal-btn" id="close-auth-modal-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button id="auth-tab-btn-login" class="auth-tab active" type="button">Sign In</button>
+                    <button id="auth-tab-btn-register" class="auth-tab" type="button">Register</button>
+                </div>
+
+                <div id="auth-error-alert" class="alert alert-danger hidden"></div>
+                <div id="auth-success-alert" class="alert alert-success hidden"></div>
+
+                <!-- 1. LOGIN FORM -->
+                <form id="auth-form-login" class="auth-form-pane" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="login-identifier">Username or Email</label>
+                        <input type="text" id="login-identifier" class="form-control" placeholder="e.g. green_collector or user@ecovision.org" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="login-password" class="form-control" placeholder="Enter your password" autocomplete="current-password" required>
+                            <button type="button" class="btn-toggle-pwd" data-target="login-password" title="Show or hide password">Show</button>
+                        </div>
+                    </div>
+                    <button id="btn-login-submit" class="btn btn-primary btn-block mt-3" type="submit">
+                        <span id="login-spinner" class="spinner hidden"></span>
+                        <span id="login-btn-text">Sign In</span>
+                    </button>
+                    <div class="auth-switch-prompt">
+                        <span class="text-muted">Don't have an account yet?</span>
+                        <a href="javascript:void(0)" id="switch-to-register-link" class="auth-link">Create an account &rarr;</a>
+                    </div>
+                </form>
+
+                <!-- 2. REGISTRATION FORM -->
+                <form id="auth-form-register" class="auth-form-pane hidden" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="register-role">Account Type</label>
+                        <select id="register-role" class="form-control">
+                            <option value="user" selected>Customer / Recycler (Track Points &amp; Bank Details)</option>
+                            <option value="collector">Collection Center Staff / Collector (Intake Desk)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" class="form-control" placeholder="Choose a username" autocomplete="username" minlength="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" class="form-control" placeholder="name@domain.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="register-password" class="form-control" placeholder="At least 6 characters" autocomplete="new-password" minlength="6" required>
+                            <button type="button" class="btn-toggle-pwd" data-target="register-password" title="Show or hide password">Show</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="register-confirm-password" class="form-control" placeholder="Re-enter password" autocomplete="new-password" minlength="6" required>
+                            <button type="button" class="btn-toggle-pwd" data-target="register-confirm-password" title="Show or hide password">Show</button>
+                        </div>
+                    </div>
+                    <button id="btn-register-submit" class="btn btn-primary btn-block mt-3" type="submit">
+                        <span id="register-spinner" class="spinner hidden"></span>
+                        <span id="register-btn-text">Create Account</span>
+                    </button>
+                    <div class="auth-switch-prompt">
+                        <span class="text-muted">Already registered?</span>
+                        <a href="javascript:void(0)" id="switch-to-login-link" class="auth-link">Sign in instead &rarr;</a>
+                    </div>
+                </form>
+            </div>
+        </div>

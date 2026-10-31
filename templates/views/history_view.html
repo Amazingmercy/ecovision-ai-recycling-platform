@@ -1,0 +1,96 @@
+        <!-- ================================================================= -->
+        <!-- SCREEN 3: DEDICATED PAGINATED RECYCLING AUDIT & HISTORY LEDGER   -->
+        <!-- ================================================================= -->
+        <section id="view-history" class="view-section hidden" style="display: none;" aria-labelledby="history-page-title">
+            
+            <div class="dashboard-hero history-hero-card">
+                <div class="hero-text">
+                    <div class="portal-badge" id="history-portal-badge">
+                        <span>AUDIT RECORD &bull; FULL LEDGER</span>
+                    </div>
+                    <h1 class="hero-title" id="history-page-title">Recycling Audit Ledger</h1>
+                    <p class="hero-subtitle" id="history-page-subtitle">Itemized audit record of all past recyclable waste image scans, YOLO11 computer vision detections, and points credited.</p>
+                </div>
+                <div class="hero-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="btn-hist-back-dashboard" class="btn btn-outline" type="button">
+                        &larr; Back to Dashboard
+                    </button>
+                    <button id="btn-hist-scan" class="btn btn-primary" type="button">
+                        📷 Open Camera &amp; Scan Studio
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUMMARY METRICS ROW -->
+            <div class="history-metric-grid mt-3">
+                <div class="h-metric-card highlight">
+                    <span class="h-metric-lbl">Total Intakes</span>
+                    <span class="h-metric-val" id="hist-total-count">0</span>
+                </div>
+                <div class="h-metric-card">
+                    <span class="h-metric-lbl">Plastics Collected</span>
+                    <span class="h-metric-val" id="hist-plastic-count">0</span>
+                </div>
+                <div class="h-metric-card">
+                    <span class="h-metric-lbl">Cans Collected</span>
+                    <span class="h-metric-val" id="hist-can-count">0</span>
+                </div>
+                <div class="h-metric-card">
+                    <span class="h-metric-lbl">Points Credited</span>
+                    <span class="h-metric-val" id="hist-points-count">0 Pts</span>
+                </div>
+            </div>
+
+            <!-- FILTER & SEARCH TOOLBAR -->
+            <div class="card mt-3">
+                <div class="flex-between" style="flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                    <div class="history-filter-row" style="flex: 1; min-width: 260px;">
+                        <input type="text" id="hist-search-input" class="form-control" placeholder="Search by receipt #, customer username, center, status...">
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <label for="hist-page-size" class="text-xs text-muted" style="margin: 0; white-space: nowrap;">Per page:</label>
+                        <select id="hist-page-size" class="form-control" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        <button id="btn-refresh-history-page" class="btn btn-outline btn-sm" type="button">
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PAGINATED TABLE -->
+                <div class="table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Receipt #</th>
+                                <th>Date &amp; Time</th>
+                                <th>Customer / Center</th>
+                                <th>Recyclables</th>
+                                <th>Points</th>
+                                <th>Cash Equivalent</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paginated-history-tbody">
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">Loading audit records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINATION CONTROLS BAR -->
+                <div class="pagination-bar mt-3">
+                    <span class="text-xs text-muted" id="pagination-info">Showing 0 of 0 records</span>
+                    <div class="pagination-controls">
+                        <button id="btn-hist-prev" class="btn btn-outline btn-sm" type="button" disabled>&larr; Prev</button>
+                        <div class="pagination-page-nums" id="pagination-page-nums"></div>
+                        <button id="btn-hist-next" class="btn btn-outline btn-sm" type="button" disabled>Next &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>

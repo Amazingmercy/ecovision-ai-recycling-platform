@@ -1,0 +1,189 @@
+        <!-- ================================================================= -->
+        <!-- SCREEN 2: DASHBOARD & TOTALS                                      -->
+        <!-- ================================================================= -->
+        <section id="view-dashboard" class="view-section hidden" style="display: none;" aria-labelledby="dashboard-title">
+            
+            <div class="dashboard-hero">
+                <div class="hero-text">
+                    <div class="portal-badge" id="dashboard-portal-badge">
+                        <span>RECYCLING METRICS &amp; REWARD WALLET</span>
+                    </div>
+                    <h1 class="hero-title" id="dashboard-title">Dashboard &amp; Totals</h1>
+                    <p class="hero-subtitle" id="dashboard-subtitle">Track your verified recyclable waste items, wallet point balance, and request bank payouts.</p>
+                </div>
+                <div class="hero-actions">
+                    <button id="btn-jump-scan" class="btn btn-primary" type="button">
+                        📷 Launch Camera &amp; Scan &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- METRIC CARDS GRID -->
+            <div class="metrics-grid">
+                <div class="card metric-card highlight">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-points">TOTAL REWARD WALLET</span>
+                        <span class="badge badge-primary" id="metric-badge-points">Rate: ₦10/pt</span>
+                    </div>
+                    <div class="metric-value" id="card-points">0 <span class="unit">Points</span></div>
+                    <div class="metric-sub" id="card-naira">₦0 Available Cash</div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-plastic">PLASTIC BOTTLES</span>
+                        <span class="badge badge-teal" id="metric-badge-plastic">+2 Pts ea</span>
+                    </div>
+                    <div class="metric-value" id="card-plastic-count">0</div>
+                    <div class="text-xs text-muted" id="card-plastic-points">0 Points Earned</div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-can">ALUMINUM CANS</span>
+                        <span class="badge badge-blue" id="metric-badge-can">+2 Pts ea</span>
+                    </div>
+                    <div class="metric-value" id="card-can-count">0</div>
+                    <div class="text-xs text-muted" id="card-can-points">0 Points Earned</div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-subs">SUBMISSIONS AUDIT</span>
+                        <span class="badge badge-outline" id="metric-badge-subs">Ledger</span>
+                    </div>
+                    <div class="metric-value" id="card-submissions-count">0</div>
+                    <div class="text-xs text-muted" id="card-verified-count">0 verified with rewards</div>
+                </div>
+            </div>
+
+            <!-- COLLECTOR / STAFF STATION AUDIT NOTICE (VISIBLE TO COLLECTORS ONLY) -->
+            <div class="card mt-3 highlight-staff hidden" id="collector-station-notice" style="border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.05);">
+                <div class="flex-between">
+                    <div>
+                        <span class="badge badge-primary mb-1">COLLECTION CENTER STAFF AUDIT</span>
+                        <h3 class="progress-title" style="font-size: 1.15rem; font-weight: 700; margin-top: 4px;">Center-Wide Waste &amp; Point Ledger</h3>
+                        <p class="text-sm text-muted mt-1" style="max-width: 680px; line-height: 1.5;">
+                            You are viewing the cumulative operational totals across all recyclers. Withdrawals are disabled for collection center accounts. Points and Naira values shown above reflect rewards credited directly to customer accounts.
+                        </p>
+                    </div>
+                    <span class="badge badge-teal" style="font-size: 0.75rem; padding: 6px 12px;">Staff Operator Mode</span>
+                </div>
+            </div>
+
+            <!-- CASHOUT THRESHOLD PROGRESS CARD (VISIBLE TO REGULAR USERS ONLY) -->
+            <div class="card payout-progress-card mt-3" id="payout-progress-card">
+                <div class="flex-between">
+                    <div>
+                        <h3 class="progress-title">Bank Payout Threshold (₦1,000 / 100 Points Minimum)</h3>
+                        <p class="text-sm text-muted" id="payout-progress-text">0 / 100 points accumulated to unlock direct bank transfer.</p>
+                    </div>
+                    <span class="badge badge-outline" id="payout-progress-percent">0%</span>
+                </div>
+                <div class="progress-track mt-2">
+                    <div class="progress-bar" id="payout-progress-bar" style="width: 0%;"></div>
+                </div>
+                <div class="mt-3 flex-between">
+                    <button id="withdraw-btn" class="btn btn-primary" type="button">
+                        Withdraw Cash to Saved Bank Account &rarr;
+                    </button>
+                    <span class="text-xs text-muted">Settlement: Immediate commercial bank transfer</span>
+                </div>
+            </div>
+
+            <!-- BANK ACCOUNT DETAILS (INLINE CARD IN DASHBOARD - USERS ONLY) -->
+            <div class="card mt-3" id="account-details-card">
+                <div class="card-header flex-between">
+                    <div>
+                        <span class="badge badge-primary mb-1">PAYOUT DESTINATION</span>
+                        <h2 class="card-title">Commercial Bank Account Details</h2>
+                        <p class="section-desc">Enter your Nigerian bank details to receive digital cash disbursements upon withdrawal.</p>
+                    </div>
+                    <div id="account-saved-badge" class="badge badge-primary hidden">
+                        Account Configured
+                    </div>
+                </div>
+
+                <div id="account-alert" class="alert hidden mt-2"></div>
+
+                <form id="account-details-form" class="account-form-grid mt-2" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="input-bank-name">Bank Name <span class="text-danger">*</span></label>
+                        <input list="nigerian-banks-list" type="text" id="input-bank-name" class="form-control" placeholder="Select or type your bank name" required>
+                        <datalist id="nigerian-banks-list">
+                            <option value="Access Bank">
+                            <option value="Citibank Nigeria">
+                            <option value="Ecobank Nigeria">
+                            <option value="Fidelity Bank">
+                            <option value="First Bank of Nigeria">
+                            <option value="First City Monument Bank (FCMB)">
+                            <option value="Globus Bank">
+                            <option value="Guaranty Trust Bank (GTBank)">
+                            <option value="Heritage Bank">
+                            <option value="Jaiz Bank">
+                            <option value="Keystone Bank">
+                            <option value="Kuda Bank">
+                            <option value="Moniepoint">
+                            <option value="OPay">
+                            <option value="Palmpay">
+                            <option value="Polaris Bank">
+                            <option value="Providus Bank">
+                            <option value="Stanbic IBTC Bank">
+                            <option value="Standard Chartered Bank">
+                            <option value="Sterling Bank">
+                            <option value="SunTrust Bank">
+                            <option value="Taj Bank">
+                            <option value="Titan Trust Bank">
+                            <option value="Union Bank of Nigeria">
+                            <option value="United Bank for Africa (UBA)">
+                            <option value="Unity Bank">
+                            <option value="Wema Bank (ALAT)">
+                            <option value="Zenith Bank">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-account-number">10-Digit Account Number <span class="text-danger">*</span></label>
+                        <input type="text" id="input-account-number" maxlength="10" class="form-control" placeholder="e.g. 0123456789" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-account-name">Account Holder Name <span class="text-danger">*</span></label>
+                        <input type="text" id="input-account-name" class="form-control" placeholder="e.g. Chukwuma Adebayo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-phone-number">Phone Number (Optional)</label>
+                        <input type="tel" id="input-phone-number" class="form-control" placeholder="e.g. 08012345678">
+                    </div>
+
+                    <div class="form-action-row">
+                        <button id="btn-save-account-details" class="btn btn-primary" type="submit">
+                            <span id="save-account-spinner" class="spinner hidden"></span>
+                            <span id="save-account-text">Save Bank Account Details</span>
+                        </button>
+                        <span class="text-muted text-sm" id="account-status-text">Not yet saved</span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SUBMISSIONS AUDIT HISTORY CARD -->
+            <div class="card history-card mt-3">
+                <div class="history-card-header flex-between">
+                    <div>
+                        <h2 id="history-section-title">Submissions &amp; Reward Audit History</h2>
+                        <p class="section-desc" id="history-section-desc">Itemized audit record of all past recyclable waste image scans and points credited.</p>
+                    </div>
+                    <button id="refresh-history-btn" class="btn btn-outline btn-sm" type="button">
+                        Refresh Records
+                    </button>
+                </div>
+
+                <div class="history-table-wrapper">
+                    <div class="history-list" id="submissions-history-list">
+                        <p class="text-muted text-center py-4">Loading your recycling history...</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>

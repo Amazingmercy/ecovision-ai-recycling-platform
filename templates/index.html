@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>EcoVision AI - Recyclable Waste Verification & Reward Platform</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=6.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    
+    <header class="navbar">
+        <a href="#scan" class="nav-brand" id="nav-brand-link" title="EcoVision AI - Return to Studio">
+            <span class="logo-icon-badge" aria-label="EcoVision Logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/>
+                    <path d="M11 19h8.2a1.8 1.8 0 0 0 1.57-.88 1.78 1.78 0 0 0 0-1.79l-4.13-7.33"/>
+                    <path d="m14 12 3-6 3 6"/>
+                    <path d="M3.5 12h6"/>
+                    <path d="m3 16 2 3-3 2"/>
+                </svg>
+            </span>
+            <div class="logo-text-group">
+                <span class="logo-title">EcoVision AI</span>
+                <span class="logo-subtitle">Computer Vision Waste Verification</span>
+            </div>
+        </a>
+
+        <!-- USER & QUICK WALLET BADGE -->
+        <div class="nav-user-panel">
+            <!-- Staff Quick Customer Lookup button -->
+            <button id="btn-nav-quick-check" class="quick-check-nav-btn hidden" type="button" title="Customer lookup at counter">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <span>Quick Customer Lookup</span>
+            </button>
+
+            <!-- Authenticated Profile (Clicking opens the User Sidebar!) -->
+            <div id="nav-auth-section" class="nav-auth-container">
+                <div class="user-info" id="nav-user-info-btn" role="button" title="Click to open User Sidebar">
+                    <span id="user-display-name" class="username">green_collector</span>
+                    <span id="user-display-email" class="user-email">collector@ecovision.org</span>
+                </div>
+                <button id="open-wallet-btn" class="wallet-badge" type="button" title="Click to open User Sidebar & Wallet">
+                    <span class="wallet-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="14" x="2" y="5" rx="2"/>
+                            <line x1="2" x2="22" y1="10" y2="10"/>
+                        </svg>
+                    </span>
+                    <span id="nav-points">0 Pts</span>
+                    <span class="naira-tag" id="nav-naira">₦0</span>
+                </button>
+                <button id="logout-btn" class="btn btn-outline btn-sm" type="button" title="Sign out of account">
+                    Sign Out
+                </button>
+            </div>
+
+            <!-- Guest Profile -->
+            <div id="nav-guest-section" class="nav-guest-container hidden">
+                <button id="open-auth-btn" class="btn btn-primary btn-sm" type="button" title="Sign in or register">
+                    Sign In / Register
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HIDDEN FILE INPUT -->
+
+        <div id="user-sidebar-drawer" class="user-sidebar-drawer hidden" aria-hidden="true">
+        <div class="user-sidebar-backdrop" id="user-sidebar-backdrop"></div>
+        <aside class="user-sidebar-panel" id="user-sidebar-panel">
+            <div class="user-sidebar-header">
+                <div class="sidebar-user-identity">
+                    <div class="sidebar-avatar" id="sidebar-user-avatar">U</div>
+                    <div>
+                        <h3 id="sidebar-user-name" class="sidebar-username">Customer</h3>
+                        <span id="sidebar-user-role" class="badge badge-primary">User</span>
+                    </div>
+                </div>
+                <button class="close-sidebar-btn" id="close-user-sidebar-btn" type="button" aria-label="Close user sidebar">&times;</button>
+            </div>
+
+            <div class="user-sidebar-body">
+                <!-- WALLET POINTS & CASH BALANCE -->
+                <div class="sidebar-wallet-card">
+                    <span class="sidebar-card-label">AVAILABLE RECYCLING BALANCE</span>
+                    <div class="sidebar-balance-row">
+                        <div class="sidebar-points" id="sidebar-points-val">0 <span class="unit">Pts</span></div>
+                        <div class="sidebar-naira" id="sidebar-naira-val">₦0 Cash</div>
+                    </div>
+                    <div class="sidebar-progress-box mt-2">
+                        <div class="flex-between text-xs text-muted">
+                            <span>Payout Threshold: 100 Pts (₦1,000)</span>
+                            <span id="sidebar-progress-percent">0%</span>
+                        </div>
+                        <div class="progress-track mt-1">
+                            <div class="progress-bar" id="sidebar-progress-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <button id="sidebar-withdraw-btn" class="btn btn-primary btn-block mt-3" type="button">
+                        Withdraw Cash to Bank
+                    </button>
+                </div>
+
+                <!-- BANK ACCOUNT DETAILS (ENTER & SAVE) -->
+                <div class="sidebar-section-card mt-3">
+                    <div class="sidebar-card-header">
+                        <h4>Bank Account Details</h4>
+                        <span class="text-xs text-muted">Direct commercial bank disbursement</span>
+                    </div>
+
+                    <div id="sidebar-account-alert" class="alert hidden mt-2"></div>
+
+                    <form id="sidebar-account-form" onsubmit="return false;" class="mt-2">
+                        <div class="form-group">
+                            <label for="sidebar-bank-name">Bank Name</label>
+                            <input list="nigerian-banks-list" type="text" id="sidebar-bank-name" class="form-control" placeholder="Select or type your bank name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sidebar-account-number">10-Digit Account Number</label>
+                            <input type="text" id="sidebar-account-number" maxlength="10" class="form-control" placeholder="e.g. 0123456789" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sidebar-account-name">Account Holder Name</label>
+                            <input type="text" id="sidebar-account-name" class="form-control" placeholder="e.g. Chukwuma Adebayo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sidebar-phone-number">Phone Number (Optional)</label>
+                            <input type="tel" id="sidebar-phone-number" class="form-control" placeholder="e.g. 08012345678">
+                        </div>
+                        <button id="sidebar-btn-save-account" class="btn btn-outline btn-block mt-2" type="submit">
+                            <span id="sidebar-save-spinner" class="spinner hidden"></span>
+                            <span>Save Bank Account</span>
+                        </button>
+                        <span id="sidebar-account-status" class="text-muted text-xs block text-center mt-1">Not yet configured</span>
+                    </form>
+                </div>
+
+                <!-- QUICK RECENT ACTIVITY -->
+                <div class="sidebar-section-card mt-3">
+                    <div class="sidebar-card-header flex-between">
+                        <h4>Recent Intakes</h4>
+                        <span class="text-xs text-muted" id="sidebar-history-count">0 Records</span>
+                    </div>
+                    <div class="sidebar-history-list mt-2" id="sidebar-history-list">
+                        <p class="text-muted text-xs text-center py-2">No past drop-offs yet.</p>
+                    </div>
+                    <button id="sidebar-btn-view-ledger" class="btn btn-outline btn-block mt-2" type="button" style="font-size: 0.8rem; padding: 6px 12px;">
+                        Open Dedicated History Ledger &rarr;
+                    </button>
+                </div>
+
+                <!-- SIGN OUT / SWITCH -->
+                <div class="sidebar-footer-actions mt-3">
+                    <button id="sidebar-logout-btn" class="btn btn-outline btn-block" type="button">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-container">
+
+    <!-- ================================================================= -->
+<!-- VIEW 0: HOME LANDING PAGE (WELCOME, REGISTER, SIGN IN)            -->
+<!-- ================================================================= -->
+<section id="view-home" class="view-section" style="display: none;" aria-labelledby="home-hero-title">
+    <div class="home-hero-card">
+        <div class="hero-badge-pill">
+            <span class="pulse-indicator"></span>
+            <span>EcoVision AI Recyclable Waste Platform</span>
+        </div>
+        <h1 class="hero-title" id="home-hero-title">
+            Turn Recyclable Waste into <span class="gradient-text">Instant Cash Rewards</span>
+        </h1>
+        <p class="hero-subtitle">
+            Submit recyclable plastic bottles and aluminum cans at local collection centers. Our trained YOLO11 vision model audits items with automated counting, verified credit settlement, and direct transfers to Nigerian commercial bank accounts.
+        </p>
+
+        <!-- Call-to-Action Buttons -->
+        <div class="hero-actions-group">
+            <button id="btn-home-register" class="btn btn-primary btn-lg" type="button">
+                Register Account &rarr;
+            </button>
+           
+
+        </div>
+
+        <!-- 3 Highlights / Getting Started -->
+        <div class="home-features-grid mt-4">
+            <div class="feature-item-card">
+                <span class="feature-icon-circle">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                </span>
+                <h3>1. Snap &amp; Verify</h3>
+                <p>Snap drop-offs using the counter camera or upload high-res photos for instant YOLO11 computer vision inspection.</p>
+            </div>
+            <div class="feature-item-card">
+                <span class="feature-icon-circle">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </span>
+                <h3>2. Earn Real Points</h3>
+                <p>Earn 2 Points (₦20) per verified recyclable plastic bottle or can, credited automatically to your digital wallet.</p>
+            </div>
+            <div class="feature-item-card">
+                <span class="feature-icon-circle">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="14" x="2" y="5" rx="2"/>
+                        <line x1="2" x2="22" y1="10" y2="10"/>
+                    </svg>
+                </span>
+                <h3>3. Cash Out to Bank</h3>
+                <p>Provide your Nigerian commercial bank details to withdraw cash directly to your account (minimum threshold ₦1,000).</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+            <!-- ================================================================= -->
+        <!-- SCREEN 1: CAMERA & SCAN STUDIO (PREVIOUS STRUCTURE FROM IMAGE)    -->
+        <!-- ================================================================= -->
+        <section id="view-scan" class="view-section active" style="display: block;" aria-labelledby="scan-title">
+            
+            <!-- STUDIO HEADER BANNER (EXACTLY AS IN SCREENSHOT) -->
+            <div class="studio-header-card">
+                <div class="studio-intro">
+                    <h1 class="studio-title" id="scan-title">📷 Recyclable Waste Camera &amp; Scan Studio</h1>
+                    <p class="studio-subtitle">
+                        Snap a frame with the live camera or upload a photo of recyclable waste. The trained YOLO11 model detects plastics and cans with bounding boxes and calculates your instant reward.
+                    </p>
+                </div>
+                <div class="studio-actions">
+                    <button id="btn-jump-dashboard" class="btn btn-outline btn-sm" type="button">
+                        📊 View Full Dashboard &amp; Totals &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- CUSTOMER SELECTION BAR AT COUNTER (STAFF INTAKE) -->
+            <div class="card customer-intake-card mt-3">
+                <div class="card-header flex-between">
+                    <div>
+                        <span class="badge badge-primary mb-1">COLLECTION CENTER COUNTER</span>
+                        <h2 class="card-title">Customer Submitting Recyclable Waste</h2>
+                        <p class="section-desc">Search walk-in customer by username, email, or phone to credit rewards.</p>
+                    </div>
+                    <div class="intake-actions-header">
+                        <button id="btn-quick-new-customer" class="btn btn-primary btn-sm" type="button">
+                            + Register Walk-In Customer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="customer-search-wrapper mt-2">
+                    <div class="search-input-group">
+                        <span class="search-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="customer-search-input" class="form-control" placeholder="Search customer by name, email, or phone..." autocomplete="off">
+                        <button id="btn-clear-search" class="btn-icon-clear hidden" type="button" aria-label="Clear search">&times;</button>
+                    </div>
+                    <div id="customer-search-results" class="customer-search-results hidden"></div>
+                </div>
+
+                <!-- Active Customer Selected Badge -->
+                <div id="active-customer-box" class="active-customer-box mt-2">
+                    <div class="customer-pill">
+                        <div class="customer-avatar-large" id="active-customer-avatar">C</div>
+                        <div>
+                            <strong id="active-customer-name" class="customer-title">Walk-In Customer</strong>
+                            <span id="active-customer-email" class="customer-sub block">Search above or register new customer</span>
+                            <span id="active-customer-phone" class="text-xs text-muted block"></span>
+                        </div>
+                    </div>
+                    <div class="customer-details-strip">
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">CURRENT BALANCE</span>
+                            <strong id="active-customer-points" class="text-green">0 Pts</strong>
+                        </div>
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">BANK PAYOUT</span>
+                            <strong id="active-customer-bank-status" class="text-secondary text-xs">Unregistered</strong>
+                        </div>
+                        <button id="btn-switch-customer" class="btn btn-outline btn-sm" type="button">Change</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDIO SPLIT (LEFT: CAMERA/PHOTO; RIGHT: VERIFICATION RESULT) -->
+            <div class="studio-grid mt-3">
+                
+                <!-- LEFT COLUMN: INPUT WORKBENCH & VISUAL FEED -->
+                <div class="card workbench-card">
+                    
+                    <div class="card-header" id="workbench-header">
+                        <h2 id="workbench-title">📷 Uploaded Picture</h2>
+                        <p class="section-desc" id="workbench-desc">Image loaded directly in workspace. Ready for YOLO11 verification.</p>
+                    </div>
+
+                    <!-- Input Mode Tabs -->
+                    <div class="tabs" id="workbench-tabs">
+                        <button class="tab-btn active" id="tab-upload" type="button">
+                            Upload Photo
+                        </button>
+                        <button class="tab-btn" id="tab-camera" type="button">
+                            Live Camera
+                        </button>
+                    </div>
+
+                    <!-- Tab 1: Upload Photo Dropzone -->
+                    <div id="pane-upload" class="tab-pane active">
+                        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;" class="hidden">
+                        <div class="dropzone" id="dropzone">
+                            <div class="dropzone-content">
+                                <span class="dropzone-icon">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" x2="12" y1="3" y2="15"/>
+                                    </svg>
+                                </span>
+                                <h3>Drop recyclable waste photo here</h3>
+                                <p class="text-sm text-muted mt-1">Accepts JPG, PNG, WEBP or capture directly</p>
+                                <button class="btn btn-primary mt-3" type="button" id="browse-btn">
+                                    Choose Photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Live Camera Viewfinder -->
+                    <div id="pane-camera" class="tab-pane hidden">
+                        <div class="camera-viewfinder" id="camera-viewfinder">
+                            <video id="camera-stream" autoplay playsinline muted></video>
+                            
+                            <!-- Idle / Offline Placeholder -->
+                            <div id="camera-placeholder" class="camera-placeholder">
+                                <span class="placeholder-icon">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m22 8-6 4 6 4V8Z"/>
+                                        <rect width="14" height="12" x="2" y="6" rx="2"/>
+                                    </svg>
+                                </span>
+                                <h3>Live Waste Camera Viewfinder</h3>
+                                <p class="text-sm text-muted mt-1">Point your device camera at recyclable plastic bottles or aluminum cans.</p>
+                                <button id="start-camera-btn" class="btn btn-primary mt-3" type="button">
+                                    Activate Camera Feed
+                                </button>
+                            </div>
+
+                            <!-- Camera Alignment Reticle Guide -->
+                            <div class="camera-overlay-guide hidden" id="camera-overlay-guide">
+                                <div class="reticle-box"></div>
+                                <span class="reticle-tip">Align recyclable item inside green box</span>
+                            </div>
+
+                            <!-- Live Camera Controls -->
+                            <div class="camera-controls" id="camera-controls">
+                                <button id="capture-photo-btn" class="btn btn-primary" type="button" disabled>
+                                    📸 Capture Photo
+                                </button>
+                                <button id="switch-camera-facing-btn" class="btn btn-outline btn-sm" type="button" title="Flip front/rear camera">
+                                    🔄 Flip Camera
+                                </button>
+                                <button id="stop-camera-btn" class="btn btn-secondary btn-sm" type="button" disabled>
+                                    Pause Feed
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Feedback: Canvas Container -->
+                    <div id="preview-container" class="preview-container hidden mt-3">
+                        <div class="canvas-wrapper">
+                            <canvas id="vision-canvas"></canvas>
+                        </div>
+
+                        <!-- Bounding Box Status & Legend -->
+                        <div class="preview-meta-row mt-2">
+                            <button id="toggle-bboxes-btn" class="bbox-status-badge active" type="button" title="Click to toggle bounding box display">
+                                <span class="indicator-dot"></span>
+                                <span id="bbox-toggle-label">Bounding Boxes: ALWAYS ON</span>
+                            </button>
+                            <div class="legend">
+                                <span class="legend-item"><span class="legend-color legend-plastic"></span> Plastic</span>
+                                <span class="legend-item"><span class="legend-color legend-can"></span> Can</span>
+                                <span class="legend-item"><span class="legend-color legend-other"></span> Other</span>
+                            </div>
+                        </div>
+
+                        <!-- Status Message Alert -->
+                        <div id="status-message" class="alert mt-3 hidden"></div>
+
+                        <!-- Action Buttons -->
+                        <div class="actions mt-3">
+                            <button id="submit-verify-btn" class="btn btn-success btn-lg btn-block" type="button">
+                                <span id="btn-spinner" class="spinner hidden"></span>
+                                <span id="btn-text">Run Verification &amp; Claim Reward</span>
+                            </button>
+                            <div class="flex-between mt-2 gap-2">
+                                <button id="btn-upload-new" class="btn btn-secondary btn-sm" type="button" style="flex: 1;">
+                                    Upload New Picture
+                                </button>
+                                <button id="reset-preview-btn" class="btn btn-outline btn-sm" type="button" style="flex: 1;">
+                                    Retake / Switch Source
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: VERIFICATION RESULT (EXACTLY AS IN SCREENSHOT) -->
+                <div class="card ledger-card">
+                    <div class="card-header">
+                        <h2>📋 Verification Result</h2>
+                        <p class="section-desc">YOLO11 Object Detection &amp; Reward Calculation</p>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div id="results-empty" class="results-empty">
+                        <span class="empty-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </span>
+                        <h3>No Verification Run Yet</h3>
+                        <p class="text-sm text-muted mt-1">Upload a photo or snap a frame on the left, then click <strong>Run Verification &amp; Claim Reward</strong> to see object detections and reward breakdown.</p>
+                        
+                        <div class="reward-rules-box mt-3">
+                            <h4>Reward Conversion Rules</h4>
+                            <div class="rule-chip">Plastic Bottle = <strong>+2 Points (₦20)</strong></div>
+                            <div class="rule-chip">Aluminum Can = <strong>+2 Points (₦20)</strong></div>
+                            <div class="rule-chip text-muted">Acceptance Threshold: ≥ 55% optical confidence</div>
+                        </div>
+                    </div>
+
+                    <!-- Result Breakdown -->
+                    <div id="results-breakdown" class="results-breakdown hidden">
+                        <div class="score-banner" id="score-banner">
+                            <div class="score-title" id="reward-status-label">Verified Submission</div>
+                            <div class="score-points" id="reward-points-earned">+0 Points</div>
+                            <div class="score-naira" id="reward-naira-earned">₦0 Earned</div>
+                        </div>
+
+                        <div class="receipt-customer-badge" id="receipt-customer-badge">
+                            <span>Credited To: <strong id="receipt-customer-name" class="text-green">Customer</strong></span>
+                            <span class="badge badge-outline">Station #1</span>
+                        </div>
+
+                        <div class="paired-summary-headline mt-2" id="paired-summary-headline">
+                            <span id="paired-headline-text">Detected Recyclables</span>
+                        </div>
+
+                        <!-- Grouped Summary Cards -->
+                        <div class="paired-cards-grid" id="paired-cards-container"></div>
+
+                        <!-- Granular Coordinates Dropdown -->
+                        <details class="granular-details mt-2">
+                            <summary class="granular-summary">
+                                <span>View Granular Bounding Box Coordinates (<span id="total-objects-badge">0</span> items)</span>
+                            </summary>
+                            <ul id="detected-items-ul" class="items-list mt-2"></ul>
+                        </details>
+
+                        <div class="actions mt-3">
+                            <button id="btn-scan-another" class="btn btn-outline btn-block" type="button">
+                                📷 Scan Another Photo
+                            </button>
+                            <button id="btn-view-in-dashboard" class="btn btn-secondary btn-block mt-2" type="button">
+                                📊 View Updated Dashboard &amp; Totals &rarr;
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+            <!-- ================================================================= -->
+        <!-- SCREEN 2: DASHBOARD & TOTALS                                      -->
+        <!-- ================================================================= -->
+        <section id="view-dashboard" class="view-section hidden" style="display: none;" aria-labelledby="dashboard-title">
+            
+            <div class="dashboard-hero">
+                <div class="hero-text">
+                    <div class="portal-badge" id="dashboard-portal-badge">
+                        <span>RECYCLING METRICS &amp; REWARD WALLET</span>
+                    </div>
+                    <h1 class="hero-title" id="dashboard-title">Dashboard &amp; Totals</h1>
+                    <p class="hero-subtitle" id="dashboard-subtitle">Track your verified recyclable waste items, wallet point balance, and request bank payouts.</p>
+                </div>
+                <div class="hero-actions">
+                    <button id="btn-jump-scan" class="btn btn-primary" type="button">
+                        📷 Launch Camera &amp; Scan &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- METRIC CARDS GRID -->
+            <div class="metrics-grid">
+                <div class="card metric-card highlight">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-points">TOTAL REWARD WALLET</span>
+                        <span class="badge badge-primary" id="metric-badge-points">Rate: ₦10/pt</span>
+                    </div>
+                    <div class="metric-value" id="card-points">0 <span class="unit">Points</span></div>
+                    <div class="metric-sub" id="card-naira">₦0 Available Cash</div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-plastic">PLASTIC BOTTLES</span>
+                        <span class="badge badge-teal" id="metric-badge-plastic">+2 Pts ea</span>
+                    </div>
+                    <div class="metric-value" id="card-plastic-count">0</div>
+                    <div class="text-xs text-muted" id="card-plastic-points">0 Points Earned</div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-can">ALUMINUM CANS</span>
+                        <span class="badge badge-blue" id="metric-badge-can">+2 Pts ea</span>
+                    </div>
+                    <div class="metric-value" id="card-can-count">0</div>
+                    <div class="text-xs text-muted" id="card-can-points">0 Points Earned</div>
+                </div>
+
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title" id="metric-title-subs">SUBMISSIONS AUDIT</span>
+                        <span class="badge badge-outline" id="metric-badge-subs">Ledger</span>
+                    </div>
+                    <div class="metric-value" id="card-submissions-count">0</div>
+                    <div class="text-xs text-muted" id="card-verified-count">0 verified with rewards</div>
+                </div>
+            </div>
+
+            <!-- COLLECTOR / STAFF STATION AUDIT NOTICE (VISIBLE TO COLLECTORS ONLY) -->
+            <div class="card mt-3 highlight-staff hidden" id="collector-station-notice" style="border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.05);">
+                <div class="flex-between">
+                    <div>
+                        <span class="badge badge-primary mb-1">COLLECTION CENTER STAFF AUDIT</span>
+                        <h3 class="progress-title" style="font-size: 1.15rem; font-weight: 700; margin-top: 4px;">Center-Wide Waste &amp; Point Ledger</h3>
+                        <p class="text-sm text-muted mt-1" style="max-width: 680px; line-height: 1.5;">
+                            You are viewing the cumulative operational totals across all recyclers. Withdrawals are disabled for collection center accounts. Points and Naira values shown above reflect rewards credited directly to customer accounts.
+                        </p>
+                    </div>
+                    <span class="badge badge-teal" style="font-size: 0.75rem; padding: 6px 12px;">Staff Operator Mode</span>
+                </div>
+            </div>
+
+            <!-- CASHOUT THRESHOLD PROGRESS CARD (VISIBLE TO REGULAR USERS ONLY) -->
+            <div class="card payout-progress-card mt-3" id="payout-progress-card">
+                <div class="flex-between">
+                    <div>
+                        <h3 class="progress-title">Bank Payout Threshold (₦1,000 / 100 Points Minimum)</h3>
+                        <p class="text-sm text-muted" id="payout-progress-text">0 / 100 points accumulated to unlock direct bank transfer.</p>
+                    </div>
+                    <span class="badge badge-outline" id="payout-progress-percent">0%</span>
+                </div>
+                <div class="progress-track mt-2">
+                    <div class="progress-bar" id="payout-progress-bar" style="width: 0%;"></div>
+                </div>
+                <div class="mt-3 flex-between">
+                    <button id="withdraw-btn" class="btn btn-primary" type="button">
+                        Withdraw Cash to Saved Bank Account &rarr;
+                    </button>
+                    <span class="text-xs text-muted">Settlement: Immediate commercial bank transfer</span>
+                </div>
+            </div>
+
+            <!-- BANK ACCOUNT DETAILS (INLINE CARD IN DASHBOARD - USERS ONLY) -->
+            <div class="card mt-3" id="account-details-card">
+                <div class="card-header flex-between">
+                    <div>
+                        <span class="badge badge-primary mb-1">PAYOUT DESTINATION</span>
+                        <h2 class="card-title">Commercial Bank Account Details</h2>
+                        <p class="section-desc">Enter your Nigerian bank details to receive digital cash disbursements upon withdrawal.</p>
+                    </div>
+                    <div id="account-saved-badge" class="badge badge-primary hidden">
+                        Account Configured
+                    </div>
+                </div>
+
+                <div id="account-alert" class="alert hidden mt-2"></div>
+
+                <form id="account-details-form" class="account-form-grid mt-2" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="input-bank-name">Bank Name <span class="text-danger">*</span></label>
+                        <input list="nigerian-banks-list" type="text" id="input-bank-name" class="form-control" placeholder="Select or type your bank name" required>
+                        <datalist id="nigerian-banks-list">
+                            <option value="Access Bank">
+                            <option value="Citibank Nigeria">
+                            <option value="Ecobank Nigeria">
+                            <option value="Fidelity Bank">
+                            <option value="First Bank of Nigeria">
+                            <option value="First City Monument Bank (FCMB)">
+                            <option value="Globus Bank">
+                            <option value="Guaranty Trust Bank (GTBank)">
+                            <option value="Heritage Bank">
+                            <option value="Jaiz Bank">
+                            <option value="Keystone Bank">
+                            <option value="Kuda Bank">
+                            <option value="Moniepoint">
+                            <option value="OPay">
+                            <option value="Palmpay">
+                            <option value="Polaris Bank">
+                            <option value="Providus Bank">
+                            <option value="Stanbic IBTC Bank">
+                            <option value="Standard Chartered Bank">
+                            <option value="Sterling Bank">
+                            <option value="SunTrust Bank">
+                            <option value="Taj Bank">
+                            <option value="Titan Trust Bank">
+                            <option value="Union Bank of Nigeria">
+                            <option value="United Bank for Africa (UBA)">
+                            <option value="Unity Bank">
+                            <option value="Wema Bank (ALAT)">
+                            <option value="Zenith Bank">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-account-number">10-Digit Account Number <span class="text-danger">*</span></label>
+                        <input type="text" id="input-account-number" maxlength="10" class="form-control" placeholder="e.g. 0123456789" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-account-name">Account Holder Name <span class="text-danger">*</span></label>
+                        <input type="text" id="input-account-name" class="form-control" placeholder="e.g. Chukwuma Adebayo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-phone-number">Phone Number (Optional)</label>
+                        <input type="tel" id="input-phone-number" class="form-control" placeholder="e.g. 08012345678">
+                    </div>
+
+                    <div class="form-action-row">
+                        <button id="btn-save-account-details" class="btn btn-primary" type="submit">
+                            <span id="save-account-spinner" class="spinner hidden"></span>
+                            <span id="save-account-text">Save Bank Account Details</span>
+                        </button>
+                        <span class="text-muted text-sm" id="account-status-text">Not yet saved</span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SUBMISSIONS AUDIT HISTORY CARD -->
+            <div class="card history-card mt-3">
+                <div class="history-card-header flex-between">
+                    <div>
+                        <h2 id="history-section-title">Submissions &amp; Reward Audit History</h2>
+                        <p class="section-desc" id="history-section-desc">Itemized audit record of all past recyclable waste image scans and points credited.</p>
+                    </div>
+                    <button id="refresh-history-btn" class="btn btn-outline btn-sm" type="button">
+                        Refresh Records
+                    </button>
+                </div>
+
+                <div class="history-table-wrapper">
+                    <div class="history-list" id="submissions-history-list">
+                        <p class="text-muted text-center py-4">Loading your recycling history...</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+            <!-- ================================================================= -->
+        <!-- SCREEN 3: DEDICATED PAGINATED RECYCLING AUDIT & HISTORY LEDGER   -->
+        <!-- ================================================================= -->
+        <section id="view-history" class="view-section hidden" style="display: none;" aria-labelledby="history-page-title">
+            
+            <div class="dashboard-hero history-hero-card">
+                <div class="hero-text">
+                    <div class="portal-badge" id="history-portal-badge">
+                        <span>AUDIT RECORD &bull; FULL LEDGER</span>
+                    </div>
+                    <h1 class="hero-title" id="history-page-title">Recycling Audit Ledger</h1>
+                    <p class="hero-subtitle" id="history-page-subtitle">Itemized audit record of all past recyclable waste image scans, YOLO11 computer vision detections, and points credited.</p>
+                </div>
+                <div class="hero-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="btn-hist-back-dashboard" class="btn btn-outline" type="button">
+                        &larr; Back to Dashboard
+                    </button>
+                    <button id="btn-hist-scan" class="btn btn-primary" type="button">
+                        📷 Open Camera &amp; Scan Studio
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUMMARY METRICS ROW -->
+            <div class="history-metric-grid mt-3">
+                <div class="h-metric-card highlight">
+                    <span class="h-metric-lbl">Total Intakes</span>
+                    <span class="h-metric-val" id="hist-total-count">0</span>
+                </div>
+                <div class="h-metric-card">
+                    <span class="h-metric-lbl">Plastics Collected</span>
+                    <span class="h-metric-val" id="hist-plastic-count">0</span>
+                </div>
+                <div class="h-metric-card">
+                    <span class="h-metric-lbl">Cans Collected</span>
+                    <span class="h-metric-val" id="hist-can-count">0</span>
+                </div>
+                <div class="h-metric-card">
+                    <span class="h-metric-lbl">Points Credited</span>
+                    <span class="h-metric-val" id="hist-points-count">0 Pts</span>
+                </div>
+            </div>
+
+            <!-- FILTER & SEARCH TOOLBAR -->
+            <div class="card mt-3">
+                <div class="flex-between" style="flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                    <div class="history-filter-row" style="flex: 1; min-width: 260px;">
+                        <input type="text" id="hist-search-input" class="form-control" placeholder="Search by receipt #, customer username, center, status...">
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <label for="hist-page-size" class="text-xs text-muted" style="margin: 0; white-space: nowrap;">Per page:</label>
+                        <select id="hist-page-size" class="form-control" style="width: auto; padding: 6px 10px; font-size: 0.82rem;">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        <button id="btn-refresh-history-page" class="btn btn-outline btn-sm" type="button">
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PAGINATED TABLE -->
+                <div class="table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Receipt #</th>
+                                <th>Date &amp; Time</th>
+                                <th>Customer / Center</th>
+                                <th>Recyclables</th>
+                                <th>Points</th>
+                                <th>Cash Equivalent</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paginated-history-tbody">
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">Loading audit records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINATION CONTROLS BAR -->
+                <div class="pagination-bar mt-3">
+                    <span class="text-xs text-muted" id="pagination-info">Showing 0 of 0 records</span>
+                    <div class="pagination-controls">
+                        <button id="btn-hist-prev" class="btn btn-outline btn-sm" type="button" disabled>&larr; Prev</button>
+                        <div class="pagination-page-nums" id="pagination-page-nums"></div>
+                        <button id="btn-hist-next" class="btn btn-outline btn-sm" type="button" disabled>Next &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    
+    <div id="quick-check-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quick-check-title">
+        <div class="modal-backdrop" id="quick-check-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 id="quick-check-title">Customer Balance &amp; Status Lookup</h3>
+                    <p class="text-muted text-xs">Collection Center Staff Tool</p>
+                </div>
+                <button class="close-modal-btn" id="close-quick-check-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="quick-check-input">Customer Username or Email</label>
+                    <div class="search-input-group">
+                        <input type="text" id="quick-check-input" class="form-control" placeholder="e.g. green_collector or user@domain.com">
+                        <button id="btn-run-quick-check" class="btn btn-primary btn-sm" style="position: absolute; right: 4px;" type="button">Search</button>
+                    </div>
+                </div>
+                
+                <div id="quick-check-error" class="alert alert-danger hidden mt-2"></div>
+
+                <div id="quick-check-result" class="quick-check-result-card hidden mt-2">
+                    <div class="quick-user-header">
+                        <div class="quick-avatar" id="qc-avatar">U</div>
+                        <div>
+                            <strong id="qc-username" class="text-primary text-sm">username</strong>
+                            <span id="qc-email" class="text-muted text-xs block">user@example.com</span>
+                        </div>
+                    </div>
+                    <div class="quick-metrics-row mt-2">
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">POINTS</span>
+                            <strong id="qc-points" class="text-green">0 Pts</strong>
+                        </div>
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">CASH VALUE</span>
+                            <strong id="qc-naira" class="text-blue">₦0</strong>
+                        </div>
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">TOTAL VISITS</span>
+                            <strong id="qc-visits" class="text-primary">0</strong>
+                        </div>
+                    </div>
+                    <div class="quick-bank-status mt-2" id="qc-bank-box">
+                        <span id="qc-bank-text" class="text-xs">Account details: Checked</span>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button id="btn-qc-select-customer" class="btn btn-primary btn-sm btn-block" type="button">
+                            Select This Customer for Current Intake &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 2: REGISTER WALK-IN CUSTOMER (STAFF DESK)                   -->
+    <!-- ================================================================= -->
+    <div id="quick-customer-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quick-customer-title">
+        <div class="modal-backdrop" id="quick-customer-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 id="quick-customer-title">Register Walk-In Customer</h3>
+                    <p class="text-muted text-xs">Add a customer at the collection counter</p>
+                </div>
+                <button class="close-modal-btn" id="close-quick-customer-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="quick-customer-error" class="alert alert-danger hidden"></div>
+                <form id="quick-customer-form" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="qc-reg-username">Username <span class="text-danger">*</span></label>
+                        <input type="text" id="qc-reg-username" class="form-control" placeholder="e.g. chukwuma_ade" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="qc-reg-email">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" id="qc-reg-email" class="form-control" placeholder="customer@domain.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="qc-reg-phone">Phone Number (Optional)</label>
+                        <input type="tel" id="qc-reg-phone" class="form-control" placeholder="e.g. 08012345678">
+                    </div>
+                    <div class="modal-actions mt-3">
+                        <button type="button" class="btn btn-outline" id="cancel-quick-customer-btn">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirm-quick-customer-btn">Register &amp; Select</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 3: CASH WITHDRAWAL MODAL                                    -->
+    <!-- ================================================================= -->
+    <div id="withdrawal-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-backdrop" id="withdrawal-modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="modal-title">Withdraw Cash to Commercial Bank</h3>
+                <button class="close-modal-btn" id="close-modal-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <strong>Rule:</strong> 1 Point = ₦10. Minimum withdrawal threshold is <strong>100 Points (₦1,000)</strong>.
+                </div>
+                <div class="form-group">
+                    <label for="withdraw-points-input">Points to Redeem (Available: <strong id="modal-available-points" class="text-green">0</strong> Points)</label>
+                    <input type="number" id="withdraw-points-input" min="100" step="10" class="form-control" placeholder="e.g. 100">
+                    <small class="text-muted" id="modal-naira-preview">= ₦0 Cash</small>
+                </div>
+                <div id="modal-bank-on-file-box" class="alert alert-success hidden mt-2">
+                    <small>Disbursing to Saved Account: <strong id="modal-bank-on-file-text">Bank</strong></small>
+                </div>
+                <div class="form-group mt-2">
+                    <label for="withdraw-bank">Commercial Bank Name</label>
+                    <input type="text" id="withdraw-bank" class="form-control" placeholder="e.g. Access Bank, GTBank, Zenith Bank">
+                </div>
+                <div class="form-group mt-2">
+                    <label for="withdraw-account-num">10-Digit Account Number</label>
+                    <input type="text" id="withdraw-account-num" class="form-control" placeholder="0123456789" maxlength="10">
+                </div>
+                <div class="form-group mt-2">
+                    <label for="withdraw-account-name">Account Beneficiary Name</label>
+                    <input type="text" id="withdraw-account-name" class="form-control" placeholder="Account holder name">
+                </div>
+                <div id="modal-error-message" class="alert alert-danger hidden mt-2"></div>
+                <div class="modal-actions mt-3">
+                    <button type="button" class="btn btn-outline" id="cancel-withdraw-btn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirm-withdraw-btn">Confirm Withdrawal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 4: AUTHENTICATION (SIGN IN & REGISTER)                      -->
+    <!-- ================================================================= -->
+    <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+        <div class="modal-backdrop" id="auth-modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="auth-modal-title">Account Access</h3>
+                <button class="close-modal-btn" id="close-auth-modal-btn" type="button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button id="auth-tab-btn-login" class="auth-tab active" type="button">Sign In</button>
+                    <button id="auth-tab-btn-register" class="auth-tab" type="button">Register</button>
+                </div>
+
+                <div id="auth-error-alert" class="alert alert-danger hidden"></div>
+                <div id="auth-success-alert" class="alert alert-success hidden"></div>
+
+                <!-- 1. LOGIN FORM -->
+                <form id="auth-form-login" class="auth-form-pane" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="login-identifier">Username or Email</label>
+                        <input type="text" id="login-identifier" class="form-control" placeholder="e.g. green_collector or user@ecovision.org" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="login-password" class="form-control" placeholder="Enter your password" autocomplete="current-password" required>
+                            <button type="button" class="btn-toggle-pwd" data-target="login-password" title="Show or hide password">Show</button>
+                        </div>
+                    </div>
+                    <button id="btn-login-submit" class="btn btn-primary btn-block mt-3" type="submit">
+                        <span id="login-spinner" class="spinner hidden"></span>
+                        <span id="login-btn-text">Sign In</span>
+                    </button>
+                    <div class="auth-switch-prompt">
+                        <span class="text-muted">Don't have an account yet?</span>
+                        <a href="javascript:void(0)" id="switch-to-register-link" class="auth-link">Create an account &rarr;</a>
+                    </div>
+                </form>
+
+                <!-- 2. REGISTRATION FORM -->
+                <form id="auth-form-register" class="auth-form-pane hidden" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="register-role">Account Type</label>
+                        <select id="register-role" class="form-control">
+                            <option value="user" selected>Customer / Recycler (Track Points &amp; Bank Details)</option>
+                            <option value="collector">Collection Center Staff / Collector (Intake Desk)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" class="form-control" placeholder="Choose a username" autocomplete="username" minlength="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" class="form-control" placeholder="name@domain.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="register-password" class="form-control" placeholder="At least 6 characters" autocomplete="new-password" minlength="6" required>
+                            <button type="button" class="btn-toggle-pwd" data-target="register-password" title="Show or hide password">Show</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="register-confirm-password" class="form-control" placeholder="Re-enter password" autocomplete="new-password" minlength="6" required>
+                            <button type="button" class="btn-toggle-pwd" data-target="register-confirm-password" title="Show or hide password">Show</button>
+                        </div>
+                    </div>
+                    <button id="btn-register-submit" class="btn btn-primary btn-block mt-3" type="submit">
+                        <span id="register-spinner" class="spinner hidden"></span>
+                        <span id="register-btn-text">Create Account</span>
+                    </button>
+                    <div class="auth-switch-prompt">
+                        <span class="text-muted">Already registered?</span>
+                        <a href="javascript:void(0)" id="switch-to-login-link" class="auth-link">Sign in instead &rarr;</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    <script src="/static/js/app.js?v=7.0"></script>
+</body>
+</html>

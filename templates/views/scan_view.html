@@ -1,0 +1,269 @@
+        <!-- ================================================================= -->
+        <!-- SCREEN 1: CAMERA & SCAN STUDIO (PREVIOUS STRUCTURE FROM IMAGE)    -->
+        <!-- ================================================================= -->
+        <section id="view-scan" class="view-section active" style="display: block;" aria-labelledby="scan-title">
+            
+            <!-- STUDIO HEADER BANNER (EXACTLY AS IN SCREENSHOT) -->
+            <div class="studio-header-card">
+                <div class="studio-intro">
+                    <h1 class="studio-title" id="scan-title">📷 Recyclable Waste Camera &amp; Scan Studio</h1>
+                    <p class="studio-subtitle">
+                        Snap a frame with the live camera or upload a photo of recyclable waste. The trained YOLO11 model detects plastics and cans with bounding boxes and calculates your instant reward.
+                    </p>
+                </div>
+                <div class="studio-actions">
+                    <button id="btn-jump-dashboard" class="btn btn-outline btn-sm" type="button">
+                        📊 View Full Dashboard &amp; Totals &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- CUSTOMER SELECTION BAR AT COUNTER (STAFF INTAKE) -->
+            <div class="card customer-intake-card mt-3">
+                <div class="card-header flex-between">
+                    <div>
+                        <span class="badge badge-primary mb-1">COLLECTION CENTER COUNTER</span>
+                        <h2 class="card-title">Customer Submitting Recyclable Waste</h2>
+                        <p class="section-desc">Search walk-in customer by username, email, or phone to credit rewards.</p>
+                    </div>
+                    <div class="intake-actions-header">
+                        <button id="btn-quick-new-customer" class="btn btn-primary btn-sm" type="button">
+                            + Register Walk-In Customer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="customer-search-wrapper mt-2">
+                    <div class="search-input-group">
+                        <span class="search-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="customer-search-input" class="form-control" placeholder="Search customer by name, email, or phone..." autocomplete="off">
+                        <button id="btn-clear-search" class="btn-icon-clear hidden" type="button" aria-label="Clear search">&times;</button>
+                    </div>
+                    <div id="customer-search-results" class="customer-search-results hidden"></div>
+                </div>
+
+                <!-- Active Customer Selected Badge -->
+                <div id="active-customer-box" class="active-customer-box mt-2">
+                    <div class="customer-pill">
+                        <div class="customer-avatar-large" id="active-customer-avatar">C</div>
+                        <div>
+                            <strong id="active-customer-name" class="customer-title">Walk-In Customer</strong>
+                            <span id="active-customer-email" class="customer-sub block">Search above or register new customer</span>
+                            <span id="active-customer-phone" class="text-xs text-muted block"></span>
+                        </div>
+                    </div>
+                    <div class="customer-details-strip">
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">CURRENT BALANCE</span>
+                            <strong id="active-customer-points" class="text-green">0 Pts</strong>
+                        </div>
+                        <div class="quick-metric">
+                            <span class="text-xs text-muted">BANK PAYOUT</span>
+                            <strong id="active-customer-bank-status" class="text-secondary text-xs">Unregistered</strong>
+                        </div>
+                        <button id="btn-switch-customer" class="btn btn-outline btn-sm" type="button">Change</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDIO SPLIT (LEFT: CAMERA/PHOTO; RIGHT: VERIFICATION RESULT) -->
+            <div class="studio-grid mt-3">
+                
+                <!-- LEFT COLUMN: INPUT WORKBENCH & VISUAL FEED -->
+                <div class="card workbench-card">
+                    
+                    <div class="card-header" id="workbench-header">
+                        <h2 id="workbench-title">📷 Uploaded Picture</h2>
+                        <p class="section-desc" id="workbench-desc">Image loaded directly in workspace. Ready for YOLO11 verification.</p>
+                    </div>
+
+                    <!-- Input Mode Tabs -->
+                    <div class="tabs" id="workbench-tabs">
+                        <button class="tab-btn active" id="tab-upload" type="button">
+                            Upload Photo
+                        </button>
+                        <button class="tab-btn" id="tab-camera" type="button">
+                            Live Camera
+                        </button>
+                    </div>
+
+                    <!-- Tab 1: Upload Photo Dropzone -->
+                    <div id="pane-upload" class="tab-pane active">
+                        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/jpg" style="display: none;" class="hidden">
+                        <div class="dropzone" id="dropzone">
+                            <div class="dropzone-content">
+                                <span class="dropzone-icon">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" x2="12" y1="3" y2="15"/>
+                                    </svg>
+                                </span>
+                                <h3>Drop recyclable waste photo here</h3>
+                                <p class="text-sm text-muted mt-1">Accepts JPG, PNG, WEBP or capture directly</p>
+                                <button class="btn btn-primary mt-3" type="button" id="browse-btn">
+                                    Choose Photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Live Camera Viewfinder -->
+                    <div id="pane-camera" class="tab-pane hidden">
+                        <div class="camera-viewfinder" id="camera-viewfinder">
+                            <video id="camera-stream" autoplay playsinline muted></video>
+                            
+                            <!-- Idle / Offline Placeholder -->
+                            <div id="camera-placeholder" class="camera-placeholder">
+                                <span class="placeholder-icon">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m22 8-6 4 6 4V8Z"/>
+                                        <rect width="14" height="12" x="2" y="6" rx="2"/>
+                                    </svg>
+                                </span>
+                                <h3>Live Waste Camera Viewfinder</h3>
+                                <p class="text-sm text-muted mt-1">Point your device camera at recyclable plastic bottles or aluminum cans.</p>
+                                <button id="start-camera-btn" class="btn btn-primary mt-3" type="button">
+                                    Activate Camera Feed
+                                </button>
+                            </div>
+
+                            <!-- Camera Alignment Reticle Guide -->
+                            <div class="camera-overlay-guide hidden" id="camera-overlay-guide">
+                                <div class="reticle-box"></div>
+                                <span class="reticle-tip">Align recyclable item inside green box</span>
+                            </div>
+
+                            <!-- Live Camera Controls -->
+                            <div class="camera-controls" id="camera-controls">
+                                <button id="capture-photo-btn" class="btn btn-primary" type="button" disabled>
+                                    📸 Capture Photo
+                                </button>
+                                <button id="switch-camera-facing-btn" class="btn btn-outline btn-sm" type="button" title="Flip front/rear camera">
+                                    🔄 Flip Camera
+                                </button>
+                                <button id="stop-camera-btn" class="btn btn-secondary btn-sm" type="button" disabled>
+                                    Pause Feed
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Feedback: Canvas Container -->
+                    <div id="preview-container" class="preview-container hidden mt-3">
+                        <div class="canvas-wrapper">
+                            <canvas id="vision-canvas"></canvas>
+                        </div>
+
+                        <!-- Bounding Box Status & Legend -->
+                        <div class="preview-meta-row mt-2">
+                            <button id="toggle-bboxes-btn" class="bbox-status-badge active" type="button" title="Click to toggle bounding box display">
+                                <span class="indicator-dot"></span>
+                                <span id="bbox-toggle-label">Bounding Boxes: ALWAYS ON</span>
+                            </button>
+                            <div class="legend">
+                                <span class="legend-item"><span class="legend-color legend-plastic"></span> Plastic</span>
+                                <span class="legend-item"><span class="legend-color legend-can"></span> Can</span>
+                                <span class="legend-item"><span class="legend-color legend-other"></span> Other</span>
+                            </div>
+                        </div>
+
+                        <!-- Status Message Alert -->
+                        <div id="status-message" class="alert mt-3 hidden"></div>
+
+                        <!-- Action Buttons -->
+                        <div class="actions mt-3">
+                            <button id="submit-verify-btn" class="btn btn-success btn-lg btn-block" type="button">
+                                <span id="btn-spinner" class="spinner hidden"></span>
+                                <span id="btn-text">Run Verification &amp; Claim Reward</span>
+                            </button>
+                            <div class="flex-between mt-2 gap-2">
+                                <button id="btn-upload-new" class="btn btn-secondary btn-sm" type="button" style="flex: 1;">
+                                    Upload New Picture
+                                </button>
+                                <button id="reset-preview-btn" class="btn btn-outline btn-sm" type="button" style="flex: 1;">
+                                    Retake / Switch Source
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: VERIFICATION RESULT (EXACTLY AS IN SCREENSHOT) -->
+                <div class="card ledger-card">
+                    <div class="card-header">
+                        <h2>📋 Verification Result</h2>
+                        <p class="section-desc">YOLO11 Object Detection &amp; Reward Calculation</p>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div id="results-empty" class="results-empty">
+                        <span class="empty-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </span>
+                        <h3>No Verification Run Yet</h3>
+                        <p class="text-sm text-muted mt-1">Upload a photo or snap a frame on the left, then click <strong>Run Verification &amp; Claim Reward</strong> to see object detections and reward breakdown.</p>
+                        
+                        <div class="reward-rules-box mt-3">
+                            <h4>Reward Conversion Rules</h4>
+                            <div class="rule-chip">Plastic Bottle = <strong>+2 Points (₦20)</strong></div>
+                            <div class="rule-chip">Aluminum Can = <strong>+2 Points (₦20)</strong></div>
+                            <div class="rule-chip text-muted">Acceptance Threshold: ≥ 55% optical confidence</div>
+                        </div>
+                    </div>
+
+                    <!-- Result Breakdown -->
+                    <div id="results-breakdown" class="results-breakdown hidden">
+                        <div class="score-banner" id="score-banner">
+                            <div class="score-title" id="reward-status-label">Verified Submission</div>
+                            <div class="score-points" id="reward-points-earned">+0 Points</div>
+                            <div class="score-naira" id="reward-naira-earned">₦0 Earned</div>
+                        </div>
+
+                        <div class="receipt-customer-badge" id="receipt-customer-badge">
+                            <span>Credited To: <strong id="receipt-customer-name" class="text-green">Customer</strong></span>
+                            <span class="badge badge-outline">Station #1</span>
+                        </div>
+
+                        <div class="paired-summary-headline mt-2" id="paired-summary-headline">
+                            <span id="paired-headline-text">Detected Recyclables</span>
+                        </div>
+
+                        <!-- Grouped Summary Cards -->
+                        <div class="paired-cards-grid" id="paired-cards-container"></div>
+
+                        <!-- Granular Coordinates Dropdown -->
+                        <details class="granular-details mt-2">
+                            <summary class="granular-summary">
+                                <span>View Granular Bounding Box Coordinates (<span id="total-objects-badge">0</span> items)</span>
+                            </summary>
+                            <ul id="detected-items-ul" class="items-list mt-2"></ul>
+                        </details>
+
+                        <div class="actions mt-3">
+                            <button id="btn-scan-another" class="btn btn-outline btn-block" type="button">
+                                📷 Scan Another Photo
+                            </button>
+                            <button id="btn-view-in-dashboard" class="btn btn-secondary btn-block mt-2" type="button">
+                                📊 View Updated Dashboard &amp; Totals &rarr;
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
