@@ -4,6 +4,39 @@ Code and training materials for the paper "A Web-Based Computer Vision Reward Pl
 
 The platform checks photos of submitted waste with a YOLO11-small object detector and automatically rewards verified plastic items and cans. A hash-based check rejects duplicate submissions. It needs no smart-bin hardware.
 
+## Running the application
+
+### Prerequisites
+- Python 3.10+
+- Git
+
+### Setup
+
+```bash
+git clone https://github.com/Amazingmercy/ecovision-ai-recycling-platform.git
+cd ecovision-ai-recycling-platform
+
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+### Start the server
+
+```bash
+python run.py
+```
+
+### Access
+
+- Web interface: http://127.0.0.1:8000/
+- API docs (Swagger): http://127.0.0.1:8000/docs
+
+### Notes
+- The trained model (`best.pt`) and a SQLite database (`recycling_platform.db`) are included, so no extra setup is needed.
+- Uploaded images are saved to `uploads/`.
+
 
 ## Dataset
 
@@ -51,7 +84,7 @@ AI tools were used to generate part of the application code. The research design
 
 ## Citation
 
-[Authors]. (2026). A web-based computer vision reward platform for recyclable waste collection. 
+[Mercy Amaefule & Bartholomew Terna]. (2026). A web-based computer vision reward platform for recyclable waste collection. 
 
 ## Contact
 
